@@ -1,6 +1,0 @@
-#!/bin/bash
-
-sudo apt-get install chromium-browser
-
-sudo -u postgres psql
-ALTER USER postgres PASSWORD 'postgres';
