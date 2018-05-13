@@ -1,0 +1,9 @@
+Django==2.0
+psycopg2
+requests
+selenium==2.35
+fuzzywuzzy
+pdfminer.six
+xlrd
+bs4
+xlsxwriter

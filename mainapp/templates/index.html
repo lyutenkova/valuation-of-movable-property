@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Оценка рыночной стоимости движимого имущества</title>
+    <link href="https://fonts.googleapis.com/css?family=Arimo:400,400i,700,700i&amp;subset=cyrillic" rel="stylesheet">
+  </head>
+<body>
+<h1 style="text-align:center"> Проверка обременений</h1>
+
+{% load static %}
+<div align="center">
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile">
+    <button type="submit">Загрузить</button>
+  </form>
+<p style="color:red">{{ response }}</p>
+  {% if uploaded_file_url %}
+    <p>Успешно загружен файл: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+  {% endif %}
+
+{% endblock %}
+</div>
+</body>
+</html>
