@@ -8,8 +8,6 @@ from django.shortcuts import render
 # Create your views here.
 from export_excel import export_to_excel
 from main import get_documents_for_organization
-from parser_egrn import plan_b_parse_egrn
-from parsing_exel import get_dict_from_exel_kostyl
 from support import save_file_to_disk, save_files_to_disk
 
 

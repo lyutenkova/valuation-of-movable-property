@@ -9,7 +9,6 @@ from fuzzywuzzy import fuzz
 from selenium.common.exceptions import TimeoutException
 
 from gos_checker.settings import DOCS
-from pdf_parser import parse_documents
 from support import create_webdriver
 
 
