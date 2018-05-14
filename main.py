@@ -9,12 +9,9 @@ from fuzzywuzzy import fuzz
 from selenium.common.exceptions import TimeoutException
 
 from gos_checker.settings import DOCS
-from support import create_webdriver
-
 
 #Вкладка залогодатель
 def navigate_to_pledgor_tab():
-    webdriver = create_webdriver('http://www.reestr-zalogov.ru/search')
     webdriver.get('https://www.reestr-zalogov.ru/search/index#search-by-pledgor')
     webdriver.get_screenshot_as_file("capture.png")
     lnk = webdriver.find_element_by_xpath("//a[contains(text(), 'По информации о залогодателе')]")
