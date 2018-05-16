@@ -27,6 +27,7 @@
 {% csrf_token %}
 <div align="center">
 	{% block content %}
+	
 	<form method="post" enctype="multipart/form-data">
 		<input type="file" name="myfile" multiple>
 		<button class="button" type="submit">Загрузить</button>
@@ -36,7 +37,20 @@
 	{% if uploaded_file_url %}
 	<p>Успешно загружен файл: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
 	{% endif %}
-{% endblock %}
+
+	<br>
+	<br>
+	<br>
+	<br>	
+
+	<hr color="#16a085">
+
+	<h3> Для выгрузки данных из базы, выберите подход </h3>
+
+	<button class="button_new" type="submit"> Сравнительный </button>
+	<button class="button_new" type="submit"> Затратный </button>
+
+	{% endblock %}
 </div>
 </body>
 </html>

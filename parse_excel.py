@@ -2,6 +2,7 @@ import xlrd
 import xlwt
 from django.forms.models import model_to_dict
 from mainapp.models import ComparativeApproach, CostApproach
+import psycopg2
 
 COST = 'cost_approach'
 COMPARATIVE = 'comparative_approach'
@@ -123,10 +124,29 @@ def message_for_user(path_to_file):
     flag = write_data_to_base(paths) # успешно ли прошла запись в базу?
 
     if flag:
+        if (os.path.exists("cost.xls")):
+            os.remove("cost.xls")
+        if(os.path.exists("comparative.xls")):
+            os.remove("comparative.xls")
+        if(os.path.exists("input.xlsm")):
+            os.remove("input.xlsm")
+
         return 'Данные из файла успешно загружены в базу!'
+
     else:
         return 'Произошла ошибка при загрузке данных из файла, пожалуйста проверьте формат файла и заполненные данные!'
 
 
 def data_from_db():
-    pass
+    conn = psycopg2.connect(database="checker", user="postgres", password="postgres", host="127.0.0.1", port="5432")
+
+    cur = conn.cursor()
+
+    cur.execute("""COPY (SELECT "cost_approach".* FROM "cost_approach")
+    TO './cost.csv'
+    WITH DELIMITER ';' CSV HEADER""")
+    
+    # rows = cur.fetchall()
+    # print(rows)
+    
+    conn.close()

@@ -17,7 +17,7 @@ def index(request):
             uploaded_path = save_file_to_disk(request)
             message = parse_excel.message_for_user(uploaded_path)
 
-            return render(request, 'index.html', {'response': "Файл успешно загружен!"})
+            return render(request, 'index.html', {'response': message})
 
         except Exception as e:
             print("views ", e)
