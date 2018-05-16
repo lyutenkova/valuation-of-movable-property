@@ -6,9 +6,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
 from export_excel import export_to_excel
-from main import get_documents_for_organization
 from support import save_file_to_disk
-from parse_excel import make_two_files
+import parse_excel
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
@@ -16,12 +15,12 @@ def index(request):
     if request.method == 'POST' and request.FILES['myfile']:
         try:
             uploaded_path = save_file_to_disk(request)
-            paths = make_two_files(uploaded_path)
+            message = parse_excel.message_for_user(uploaded_path)
 
             return render(request, 'index.html', {'response': "Файл успешно загружен!"})
 
         except Exception as e:
-            print(e)
+            print("views ", e)
             return render(request, 'index.html', {'response':'Ошибка обработки файла. Неверный формат.'})
     else:
         return render(request, 'index.html', {})

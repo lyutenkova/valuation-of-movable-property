@@ -4,7 +4,7 @@ from datetime import datetime
 
 class ComparativeApproach(CreateMixin):
     name = models.CharField(max_length=256, blank=True, null=True)
-    year = models.DateField(null=True, default=None)
+    year = models.IntegerField(null=True, default=0)
     mileage = models.FloatField(null=True, default=None)
     offer_price = models.FloatField(null=True, default=None)
     par1_name = models.CharField(max_length=256, blank=True, null=True)

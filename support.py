@@ -18,13 +18,3 @@ def save_file_to_disk(request):
     full_path = os.path.join(fs.location, filename)
     print("UPLOADED", filename)
     return full_path
-
-# def save_files_to_disk(request):
-#     paths = []
-#     fs = FileSystemStorage()
-#     for f in request.FILES.getlist('myfile'):
-#         filename = fs.save(f.name, f)
-#         full_path = os.path.join(fs.location, filename)
-#         paths += [full_path]
-#         print("UPLOADED", filename)
-#     return paths

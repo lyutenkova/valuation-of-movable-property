@@ -1,7 +1,7 @@
 import xlrd
 import xlwt
 from django.forms.models import model_to_dict
-from main_app.models import ComparativeApproach, CostApproach
+from mainapp.models import ComparativeApproach, CostApproach
 
 COST = 'cost_approach'
 COMPARATIVE = 'comparative_approach'
@@ -43,8 +43,11 @@ def write_data_to_base(paths):
     flag = False
 
     try:
-        parse_zatrat(paths[0])
-        parse_sravnit(paths[1])
+        cost_list = parse_cost(paths[0])
+        save_to_db(cost_list, COST)
+
+        comparative_list = parse_comparative(paths[1])
+        save_to_db(comparative_list, COMPARATIVE)
 
         flag = True
 
@@ -56,48 +59,73 @@ def write_data_to_base(paths):
 
 
 def parse_comparative(path_to_file):
-    db_dict = {"name": [], "year": [], "mileage": [], "offer_price": [], "par1_name": [], "par1_val": [], "par2_name": [], "par2_val": []}
-    
+    list_dicts = [] # список строк для разыменования в базу
+
     workbook = xlrd.open_workbook(path_to_file)
-    sheet = rb.sheet_by_index(0)
-    k_rows = sheet.nrows
+    sheet = workbook.sheet_by_index(0)
+    k_rows = sheet.nrows # кол-во объектов в файле
 
-    db_dict['name'] = [sheet.row_values(i)[0] for i in range(5, k_rows)]
-    db_dict['year'] = [sheet.row_values(i)[1] for i in range(5, k_rows)]
-    db_dict['mileage'] = [sheet.row_values(i)[2] for i in range(5, k_rows)]
-    db_dict['offer_price'] = [sheet.row_values(i)[17] for i in range(5, k_rows)]
-    db_dict['par1_name'] = [sheet.row_values(i)[21] for i in range(5, k_rows)]
-    db_dict['par1_val'] = [sheet.row_values(i)[22] for i in range(5, k_rows)]
-    db_dict['par2_name'] = [sheet.row_values(i)[23] for i in range(5, k_rows)]
-    db_dict['par2_val'] = [sheet.row_values(i)[24] for i in range(5, k_rows)]
+    for row in range(5, k_rows):
+        db_dict = {"name": None, "year": None, "mileage": None, "offer_price": None, "par1_name": None, "par1_val": None, "par2_name": None, "par2_val": None}
+        
+        db_dict['name'] = sheet.row_values(row)[0]
+        db_dict['year'] = sheet.row_values(row)[1] 
+        db_dict['mileage'] = sheet.row_values(row)[2] 
+        db_dict['offer_price'] = sheet.row_values(row)[17] 
+        db_dict['par1_name'] = sheet.row_values(5)[21] 
+        db_dict['par1_val'] = sheet.row_values(row)[22] 
+        db_dict['par2_name'] = sheet.row_values(5)[23] 
+        db_dict['par2_val'] = sheet.row_values(row)[24] 
 
-    return db_dict
+        list_dicts.append(db_dict)
+
+    return list_dicts
 
 def parse_cost(path_to_file):
-    db_dict = {"mark": [], "cost_of_new": [], "par1_name": [], "par1_val": [], "par2_name": [], "par2_val": []}
+    list_dicts = []
     
     workbook = xlrd.open_workbook(path_to_file)
     sheet = workbook.sheet_by_index(0)
     k_rows = sheet.nrows
 
-    db_dict['mark'] = [sheet.row_values(i)[1] for i in range(5, k_rows)]
-    db_dict['cost_of_new'] = [sheet.row_values(i)[4] for i in range(5, k_rows)]
-    db_dict['par1_name'] = [sheet.row_values(i)[6] for i in range(5, k_rows)]
-    db_dict['par1_val'] = [sheet.row_values(i)[7] for i in range(5, k_rows)]
-    db_dict['par2_name'] = [sheet.row_values(i)[8] for i in range(5, k_rows)]
-    db_dict['par2_val'] = [sheet.row_values(i)[9] for i in range(5, k_rows)]
+    for row in range(5, k_rows):
+        db_dict = {"mark": None, "cost_of_new": None, "par1_name": None, "par1_val": None, "par2_name": None, "par2_val": None}
+        
+        db_dict['mark'] = sheet.row_values(row)[1]
+        db_dict['cost_of_new'] = sheet.row_values(row)[4]
+        db_dict['par1_name'] = sheet.row_values(5)[6]
+        db_dict['par1_val'] = sheet.row_values(row)[7]
+        db_dict['par2_name'] = sheet.row_values(5)[8]
+        db_dict['par2_val'] = sheet.row_values(row)[9]
 
-    return db_dict
+        list_dicts.append(db_dict)
+
+    return list_dicts
 
 
-def save_to_db(db_dict, param):
+def save_to_db(list_dicts, param):
     if param == COST:
-        for row in db_dict:
-            CostApproach(**db_dict).save()
+        for dict_row in list_dicts:
+            print("СТРОКА_ЗАТРАТ", dict_row)
+            CostApproach(**dict_row).save()
 
     if param == COMPARATIVE:
-        for row in db_dict:
-            ComparativeApproach(**db_dict).save()
+        for dict_row in list_dicts:
+            print("СТРОКА_СРАВНИТ", dict_row)
+            ComparativeApproach(**dict_row).save()
+
+
+def message_for_user(path_to_file):
+    # разбираем файл на два, возвращаем пути до них
+    paths = make_two_files(path_to_file)
+    # записываем данные из файлов в базу
+    # - для этого парсим поочередно оба файла и вызываем функцию save для каждого
+    flag = write_data_to_base(paths) # успешно ли прошла запись в базу?
+
+    if flag:
+        return 'Данные из файла успешно загружены в базу!'
+    else:
+        return 'Произошла ошибка при загрузке данных из файла, пожалуйста проверьте формат файла и заполненные данные!'
 
 
 def data_from_db():
