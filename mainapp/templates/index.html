@@ -45,11 +45,20 @@
 
 	<hr color="#16a085">
 
-	<h3> Для выгрузки данных из базы, выберите подход </h3>
+	<h3> Для выгрузки данных из базы выберите подход </h3>
 
-	<button class="button_new" type="submit"> Сравнительный </button>
-	<button class="button_new" type="submit"> Затратный </button>
-
+	<div class="div_inline">
+		<form action="/get_data_comparative" method="get">
+				<button class="button_new" type="submit"> Сравнительный </button>
+		</form>
+	</div>
+	
+	<div class="div_inline">
+		<form action="/get_data_cost" method="get">
+				<button class="button_new" type="submit"> Затратный </button>
+		</form>
+	</div>
+	
 	{% endblock %}
 </div>
 </body>

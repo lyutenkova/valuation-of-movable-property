@@ -9,6 +9,7 @@ import xlsxwriter
 def export_to_excel(excel_dict):
     output = io.BytesIO()
     workbook = Workbook(output, {'in_memory': True})
+    
     format_for_data = workbook.add_format({'font_name': 'Times New Roman' , 'font_size': 10 })
     header_format = workbook.add_format({"bold": True, "font_name": "Times New Roman" , "font_size": 10, 'bg_color': '#4CB486'})
     worksheet = workbook.add_worksheet()

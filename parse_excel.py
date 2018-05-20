@@ -3,6 +3,7 @@ import xlwt
 from django.forms.models import model_to_dict
 from mainapp.models import ComparativeApproach, CostApproach
 import psycopg2
+import os
 
 COST = 'cost_approach'
 COMPARATIVE = 'comparative_approach'
@@ -136,17 +137,3 @@ def message_for_user(path_to_file):
     else:
         return 'Произошла ошибка при загрузке данных из файла, пожалуйста проверьте формат файла и заполненные данные!'
 
-
-def data_from_db():
-    conn = psycopg2.connect(database="checker", user="postgres", password="postgres", host="127.0.0.1", port="5432")
-
-    cur = conn.cursor()
-
-    cur.execute("""COPY (SELECT "cost_approach".* FROM "cost_approach")
-    TO './cost.csv'
-    WITH DELIMITER ';' CSV HEADER""")
-    
-    # rows = cur.fetchall()
-    # print(rows)
-    
-    conn.close()
